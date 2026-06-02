@@ -9,9 +9,6 @@ export async function apiRequest(route, payload = {}) {
 
   const response = await fetch(baseUrl, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({ route, apiKey: appConfig.apiKey || '', ...payload }),
   })
 
