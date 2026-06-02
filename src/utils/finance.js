@@ -1,13 +1,44 @@
 const MONTH_LABELS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
 
+function parseDateValue(value) {
+  if (!value) return null
+  if (value instanceof Date && !Number.isNaN(value.getTime())) return value
+
+  const asString = String(value).trim()
+  if (!asString) return null
+
+  const direct = new Date(asString)
+  if (!Number.isNaN(direct.getTime())) return direct
+
+  const dmyMatch = asString.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/)
+  if (dmyMatch) {
+    const day = Number(dmyMatch[1])
+    const month = Number(dmyMatch[2])
+    const year = Number(dmyMatch[3])
+    const parsed = new Date(year, month - 1, day)
+    if (!Number.isNaN(parsed.getTime())) return parsed
+  }
+
+  const ymdMatch = asString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)
+  if (ymdMatch) {
+    const year = Number(ymdMatch[1])
+    const month = Number(ymdMatch[2])
+    const day = Number(ymdMatch[3])
+    const parsed = new Date(year, month - 1, day)
+    if (!Number.isNaN(parsed.getTime())) return parsed
+  }
+
+  return null
+}
+
 export function parseAmount(value) {
   const parsed = Number(value)
   return Number.isFinite(parsed) ? parsed : 0
 }
 
 export function monthKeyFromDate(value) {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return ''
+  const date = parseDateValue(value)
+  if (!date) return ''
   const month = String(date.getMonth() + 1).padStart(2, '0')
   return `${date.getFullYear()}-${month}`
 }
