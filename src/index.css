@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  font-family: 'Sora', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  background-color: #0b0f1a;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  background-color: #f8fafc;
+}
+
+body {
+  margin: 0;
+  color: #e2e8f0;
+  background: #0b0f1a;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+[data-theme='light'] body {
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-ghost {
+    @apply rounded-lg border border-slate-700/60 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-emerald-400 hover:text-emerald-300;
+  }
+
+  .input {
+    @apply rounded-lg border border-slate-700/60 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-emerald-400;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 rounded-lg border border-transparent px-3 py-2 text-slate-300 transition hover:border-emerald-500/40 hover:bg-emerald-500/10 hover:text-emerald-200;
+  }
+
+  .nav-item-active {
+    @apply border-emerald-400/60 bg-emerald-500/10 text-emerald-200;
+  }
+
+  .badge {
+    @apply rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-300;
+  }
+
+  .bg-app {
+    background-image: radial-gradient(circle at top left, rgba(16, 185, 129, 0.2), transparent 45%),
+      radial-gradient(circle at 20% 40%, rgba(56, 189, 248, 0.12), transparent 55%),
+      linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.95));
+  }
+
+  .bg-auth {
+    background-image: radial-gradient(circle at top, rgba(56, 189, 248, 0.2), transparent 60%),
+      linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.98));
+  }
+}
