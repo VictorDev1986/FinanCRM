@@ -4,7 +4,7 @@ export const storage = {
     if (!raw) return null
     try {
       return JSON.parse(raw)
-    } catch (error) {
+    } catch {
       localStorage.removeItem(key)
       return null
     }

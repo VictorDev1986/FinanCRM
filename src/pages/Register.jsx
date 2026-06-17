@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { authService } from '../features/auth/authService.js'
-import { isEmail, isStrongPassword } from '../utils/validators.js'
+import { useAuth } from '../features/auth/AuthProvider.jsx'
+import { isEmail, isMinLength } from '../utils/validators.js'
 import { notify } from '../utils/notify.js'
 
 export default function Register() {
+  const { register } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({ nombre: '', email: '', password: '' })
   const [loading, setLoading] = useState(false)
@@ -20,16 +21,21 @@ export default function Register() {
       notify.error('Correo invalido')
       return
     }
-    if (!isStrongPassword(form.password)) {
+    if (!isMinLength(form.password)) {
       notify.error('Contrasena muy corta')
       return
     }
 
     setLoading(true)
     try {
-      await authService.register(form)
-      notify.success('Cuenta creada')
-      navigate('/login')
+      const data = await register(form)
+      if (data?.session) {
+        notify.success('Cuenta creada')
+        navigate('/')
+      } else {
+        notify.success('Cuenta creada. Revisa tu correo para confirmar.')
+        navigate('/login')
+      }
     } catch (error) {
       notify.error(error.message)
     } finally {
@@ -104,8 +110,8 @@ export default function Register() {
             <div className="rounded-xl border border-slate-800/40 bg-slate-950/60 p-6 shadow-soft">
               <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Notas</p>
               <ul className="mt-3 space-y-2">
-                <li>Tu cuenta se guarda en la hoja Usuarios.</li>
-                <li>La contrasena se guarda tal cual.</li>
+                <li>Tu cuenta se guarda de forma segura con Supabase.</li>
+                <li>Usa una contrasena de al menos 6 caracteres.</li>
                 <li>No compartas tu acceso.</li>
               </ul>
             </div>

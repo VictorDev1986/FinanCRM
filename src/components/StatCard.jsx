@@ -8,11 +8,13 @@ export default function StatCard({ label, value, trend }) {
         <h3 className="text-2xl font-semibold text-slate-100">
           {formatCurrency(value)}
         </h3>
-        <span
-          className={`text-sm font-semibold ${trend >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}
-        >
-          {formatPercent(trend)}
-        </span>
+        {trend !== null && trend !== undefined ? (
+          <span
+            className={`text-sm font-semibold ${trend >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}
+          >
+            {formatPercent(trend)}
+          </span>
+        ) : null}
       </div>
     </div>
   )

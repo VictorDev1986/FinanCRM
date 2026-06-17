@@ -8,16 +8,19 @@ import { notify } from '../utils/notify.js'
 export default function Configuracion() {
   const [theme, setTheme] = useState(storage.get('theme') || 'dark')
   const [currency, setCurrency] = useState(storage.get('currency') || 'USD')
-  const [aiModel, setAiModel] = useState('gpt-4o')
+  const [aiModel, setAiModel] = useState(storage.get('aiModel') || 'gpt-4o')
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     storage.set('theme', theme)
   }, [theme])
 
-  useEffect(() => {
+  const handleSave = () => {
+    storage.set('theme', theme)
     storage.set('currency', currency)
-  }, [currency])
+    storage.set('aiModel', aiModel)
+    notify.success('Configuracion guardada')
+  }
 
   return (
     <div className="space-y-6">
@@ -58,7 +61,7 @@ export default function Configuracion() {
           <button
             type="button"
             className="btn-primary mt-4"
-            onClick={() => notify.success('Configuracion guardada')}
+            onClick={handleSave}
           >
             Guardar
           </button>

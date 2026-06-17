@@ -33,8 +33,8 @@ export default function Ingresos() {
     )
   }, [rows, query])
 
-  const tableRows = filtered.map((row) => ({
-    id: row.id || `${row.fecha}-${row.descripcion}`,
+  const tableRows = filtered.map((row, index) => ({
+    id: row.id || `${row.fecha}-${row.descripcion}-${index}`,
     cells: [
       row.fecha || row.date,
       row.categoria || row.category,
@@ -47,7 +47,7 @@ export default function Ingresos() {
   const loadRows = async () => {
     setLoading(true)
     try {
-      const data = await financeService.listIncome(session?.email || '')
+      const data = await financeService.listIncome(session?.user?.id || '')
       setRows(data)
     } catch (error) {
       notify.error(error.message)
@@ -57,10 +57,10 @@ export default function Ingresos() {
   }
 
   useEffect(() => {
-    if (session?.email) {
+    if (session?.user?.id) {
       loadRows()
     }
-  }, [session?.email])
+  }, [session?.user?.id])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -75,7 +75,7 @@ export default function Ingresos() {
       await financeService.createIncome({
         income: {
           ...form,
-          usuario: session?.email || '',
+          usuario: session?.user?.id || '',
         },
       })
       setForm(emptyForm)

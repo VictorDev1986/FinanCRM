@@ -24,7 +24,7 @@ export default function Metas() {
   const loadGoals = async () => {
     setLoading(true)
     try {
-      const data = await financeService.listGoals(session?.email || '')
+      const data = await financeService.listGoals(session?.user?.id || '')
       setGoals(data)
     } catch (error) {
       notify.error(error.message)
@@ -34,10 +34,10 @@ export default function Metas() {
   }
 
   useEffect(() => {
-    if (session?.email) {
+    if (session?.user?.id) {
       loadGoals()
     }
-  }, [session?.email])
+  }, [session?.user?.id])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -52,7 +52,7 @@ export default function Metas() {
         goal: {
           ...form,
           actual: form.actual || 0,
-          usuario: session?.email || '',
+          usuario: session?.user?.id || '',
         },
       })
       setForm(emptyForm)
@@ -140,13 +140,13 @@ export default function Metas() {
       <div className="grid gap-4 lg:grid-cols-2">
         {loading ? <p className="text-sm text-slate-400">Cargando metas...</p> : null}
         {goals.length ? (
-          goals.map((goal) => {
+          goals.map((goal, index) => {
             const saved = parseAmount(goal.actual)
             const target = parseAmount(goal.objetivo)
             const percent = target ? Math.round((saved / target) * 100) : 0
             return (
               <div
-                key={goal.id || goal.nombre}
+                key={goal.id || `goal-${index}`}
                 className="rounded-xl border border-slate-800/50 bg-slate-950/60 p-5 shadow-soft"
               >
                 <div className="flex items-center justify-between text-sm text-slate-200">

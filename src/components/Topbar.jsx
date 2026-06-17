@@ -1,5 +1,4 @@
 import { useAuth } from '../features/auth/AuthProvider.jsx'
-import { notify } from '../utils/notify.js'
 
 export default function Topbar({ onMenuToggle }) {
   const { session, logout } = useAuth()
@@ -18,7 +17,7 @@ export default function Topbar({ onMenuToggle }) {
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Panel</p>
           <h2 className="text-lg font-semibold text-slate-100">
-            Bienvenido, {session?.name || 'Usuario'}
+            Bienvenido, {session?.user?.user_metadata?.nombre || 'Usuario'}
           </h2>
         </div>
       </div>
@@ -26,7 +25,7 @@ export default function Topbar({ onMenuToggle }) {
         <button
           type="button"
           className="btn-ghost"
-          onClick={() => notify.info('Sincronizando datos...')}
+          onClick={() => window.location.reload()}
         >
           Sincronizar
         </button>

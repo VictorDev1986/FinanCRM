@@ -7,8 +7,17 @@ export async function apiRequest(route, payload = {}) {
     throw new Error('API base URL is missing')
   }
 
+  const headers = {
+    'Content-Type': 'application/json',
+  }
+
+  if (appConfig.apiKey) {
+    headers['Authorization'] = `Bearer ${appConfig.apiKey}`
+  }
+
   const response = await fetch(baseUrl, {
     method: 'POST',
+    headers,
     body: JSON.stringify({ route, apiKey: appConfig.apiKey || '', ...payload }),
   })
 

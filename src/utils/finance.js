@@ -10,7 +10,7 @@ function parseDateValue(value) {
   const direct = new Date(asString)
   if (!Number.isNaN(direct.getTime())) return direct
 
-  const dmyMatch = asString.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/)
+  const dmyMatch = asString.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/)
   if (dmyMatch) {
     const day = Number(dmyMatch[1])
     const month = Number(dmyMatch[2])

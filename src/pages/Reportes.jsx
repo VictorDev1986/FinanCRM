@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx'
 import { financeService } from '../api/financeService.js'
 import SectionHeader from '../components/SectionHeader.jsx'
 import { buildMonthlyTotals, parseAmount } from '../utils/finance.js'
+import { formatCurrency } from '../utils/format.js'
 import { notify } from '../utils/notify.js'
 import { useAuth } from '../features/auth/AuthProvider.jsx'
 
@@ -18,8 +19,8 @@ export default function Reportes() {
     setLoading(true)
     try {
       const [income, expenses] = await Promise.all([
-        financeService.listIncome(session?.email || ''),
-        financeService.listExpenses(session?.email || ''),
+        financeService.listIncome(session?.user?.id || ''),
+        financeService.listExpenses(session?.user?.id || ''),
       ])
       setIncomeRows(income)
       setExpenseRows(expenses)
@@ -31,10 +32,10 @@ export default function Reportes() {
   }
 
   useEffect(() => {
-    if (session?.email) {
+    if (session?.user?.id) {
       loadRows()
     }
-  }, [session?.email])
+  }, [session?.user?.id])
 
   const reportRows = useMemo(() => {
     if (period === 'Mensual') {
@@ -76,7 +77,7 @@ export default function Reportes() {
     const doc = new jsPDF()
     doc.text(`Reporte ${period}`, 20, 20)
     reportRows.forEach((row, index) => {
-      doc.text(`${row.label}: ${row.income} / ${row.expense}`, 20, 40 + index * 10)
+      doc.text(`${row.label}: ${formatCurrency(row.income)} / ${formatCurrency(row.expense)}`, 20, 40 + index * 10)
     })
     doc.save(`reporte-${period.toLowerCase()}.pdf`)
   }
@@ -124,7 +125,7 @@ export default function Reportes() {
             <div key={row.label} className="flex items-center justify-between">
               <span>{row.label}</span>
               <span>
-                Ingresos {row.income} / Gastos {row.expense}
+                Ingresos {formatCurrency(row.income)} / Gastos {formatCurrency(row.expense)}
               </span>
             </div>
           ))}

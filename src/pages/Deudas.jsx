@@ -25,7 +25,7 @@ export default function Deudas() {
   const loadDebts = async () => {
     setLoading(true)
     try {
-      const data = await financeService.listDebts(session?.email || '')
+      const data = await financeService.listDebts(session?.user?.id || '')
       setDebts(data)
     } catch (error) {
       notify.error(error.message)
@@ -35,10 +35,10 @@ export default function Deudas() {
   }
 
   useEffect(() => {
-    if (session?.email) {
+    if (session?.user?.id) {
       loadDebts()
     }
-  }, [session?.email])
+  }, [session?.user?.id])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -52,7 +52,7 @@ export default function Deudas() {
       await financeService.createDebt({
         debt: {
           ...form,
-          usuario: session?.email || '',
+          usuario: session?.user?.id || '',
         },
       })
       setForm(emptyForm)
@@ -150,9 +150,9 @@ export default function Deudas() {
       <div className="grid gap-4 lg:grid-cols-2">
         {loading ? <p className="text-sm text-slate-400">Cargando deudas...</p> : null}
         {debts.length ? (
-          debts.map((debt) => (
+          debts.map((debt, index) => (
             <div
-              key={debt.id || debt.nombre}
+              key={debt.id || `debt-${index}`}
               className="rounded-xl border border-slate-800/50 bg-slate-950/60 p-5 shadow-soft"
             >
               <p className="text-sm text-slate-200">{debt.nombre}</p>

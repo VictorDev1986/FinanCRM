@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { authService } from './authService.js'
-import { storage } from '../../utils/storage.js'
 
 const AuthContext = createContext(null)
 
@@ -9,26 +8,38 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const saved = storage.get('session')
-    if (saved) {
-      setSession(saved)
-    }
-    setLoading(false)
+    authService.getSession().then((session) => {
+      setSession(session)
+      setLoading(false)
+    })
+
+    const { data: listener } = authService.onAuthChange((session) => {
+      setSession(session)
+    })
+
+    return () => listener?.subscription?.unsubscribe()
   }, [])
 
   const login = async (credentials) => {
-    const result = await authService.login(credentials)
-    storage.set('session', result.user)
-    setSession(result.user)
+    const data = await authService.login(credentials)
+    setSession(data.session)
   }
 
-  const logout = () => {
-    storage.remove('session')
+  const register = async ({ nombre, email, password }) => {
+    const data = await authService.register({ nombre, email, password })
+    if (data.session) {
+      setSession(data.session)
+    }
+    return data
+  }
+
+  const logout = async () => {
+    await authService.logout()
     setSession(null)
   }
 
   const value = useMemo(
-    () => ({ session, loading, login, logout }),
+    () => ({ session, loading, login, register, logout }),
     [session, loading]
   )
 

@@ -1,8 +1,9 @@
-export function formatCurrency(value, currency = 'USD') {
+export function formatCurrency(value, currency) {
   if (value === null || value === undefined) return '--'
+  const cur = currency || localStorage.getItem('currency') || 'USD'
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
+    currency: cur,
     maximumFractionDigits: 2,
   }).format(Number(value))
 }

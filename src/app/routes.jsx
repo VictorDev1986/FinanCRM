@@ -11,15 +11,15 @@ const Configuracion = lazy(() => import('../pages/Configuracion.jsx'))
 const IaFacturas = lazy(() => import('../pages/IaFacturas.jsx'))
 
 export const navItems = [
-  { path: '/', label: 'Dashboard', icon: '[#]' },
-  { path: '/ingresos', label: 'Ingresos', icon: '[+]' },
-  { path: '/gastos', label: 'Gastos', icon: '[-]' },
-  { path: '/presupuestos', label: 'Presupuestos', icon: '[%]' },
-  { path: '/metas', label: 'Metas', icon: '[*]' },
-  { path: '/deudas', label: 'Deudas', icon: '[=]' },
-  { path: '/reportes', label: 'Reportes', icon: '[R]' },
-  { path: '/ia-facturas', label: 'IA Facturas', icon: '[AI]' },
-  { path: '/configuracion', label: 'Configuracion', icon: '[S]' },
+  { path: '/', label: 'Dashboard', icon: '📊' },
+  { path: '/ingresos', label: 'Ingresos', icon: '💰' },
+  { path: '/gastos', label: 'Gastos', icon: '💸' },
+  { path: '/presupuestos', label: 'Presupuestos', icon: '📋' },
+  { path: '/metas', label: 'Metas', icon: '🎯' },
+  { path: '/deudas', label: 'Deudas', icon: '📉' },
+  { path: '/reportes', label: 'Reportes', icon: '📄' },
+  { path: '/ia-facturas', label: 'IA Facturas', icon: '🤖' },
+  { path: '/configuracion', label: 'Configuracion', icon: '⚙️' },
 ]
 
 export const appRoutes = [

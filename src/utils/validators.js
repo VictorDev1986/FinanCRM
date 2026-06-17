@@ -1,7 +1,7 @@
 export function isEmail(value) {
-  return /\S+@\S+\.\S+/.test(value)
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 }
 
-export function isStrongPassword(value) {
-  return value?.length >= 6
+export function isMinLength(value, min = 6) {
+  return value?.length >= min
 }

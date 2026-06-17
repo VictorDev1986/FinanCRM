@@ -29,11 +29,11 @@ export default function Dashboard() {
     setLoading(true)
     try {
       const [income, expenses, budgetRows, goalRows, debtRows] = await Promise.all([
-        financeService.listIncome(session?.email || ''),
-        financeService.listExpenses(session?.email || ''),
-        financeService.listBudgets(session?.email || ''),
-        financeService.listGoals(session?.email || ''),
-        financeService.listDebts(session?.email || ''),
+        financeService.listIncome(session?.user?.id || ''),
+        financeService.listExpenses(session?.user?.id || ''),
+        financeService.listBudgets(session?.user?.id || ''),
+        financeService.listGoals(session?.user?.id || ''),
+        financeService.listDebts(session?.user?.id || ''),
       ])
       setIncomeRows(income)
       setExpenseRows(expenses)
@@ -48,10 +48,10 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    if (session?.email) {
+    if (session?.user?.id) {
       loadData()
     }
-  }, [session?.email])
+  }, [session?.user?.id])
 
   const incomeSeries = useMemo(() => {
     return buildMonthlyTotals(incomeRows, 6, (row) => row.fecha, (row) => row.monto)

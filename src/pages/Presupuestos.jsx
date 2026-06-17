@@ -26,8 +26,8 @@ export default function Presupuestos() {
     setLoading(true)
     try {
       const [budgetRows, expenseRows] = await Promise.all([
-        financeService.listBudgets(session?.email || ''),
-        financeService.listExpenses(session?.email || ''),
+        financeService.listBudgets(session?.user?.id || ''),
+        financeService.listExpenses(session?.user?.id || ''),
       ])
       setBudgets(budgetRows)
       setExpenses(expenseRows)
@@ -39,22 +39,22 @@ export default function Presupuestos() {
   }
 
   useEffect(() => {
-    if (session?.email) {
+    if (session?.user?.id) {
       loadData()
     }
-  }, [session?.email])
+  }, [session?.user?.id])
 
-  const currentMonthKey = monthKeyFromDate(new Date())
-
-  const spentByCategory = useMemo(() => {
-    const totals = {}
+  const spentByCategoryAndMonth = useMemo(() => {
+    const map = {}
     expenses.forEach((expense) => {
-      if (monthKeyFromDate(expense.fecha) !== currentMonthKey) return
+      const month = monthKeyFromDate(expense.fecha)
+      if (!month) return
       const category = expense.categoria || 'Otros'
-      totals[category] = (totals[category] || 0) + parseAmount(expense.monto)
+      const key = `${month}-${category}`
+      map[key] = (map[key] || 0) + parseAmount(expense.monto)
     })
-    return totals
-  }, [expenses, currentMonthKey])
+    return map
+  }, [expenses])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -67,7 +67,7 @@ export default function Presupuestos() {
       await financeService.createBudget({
         budget: {
           ...form,
-          usuario: session?.email || '',
+          usuario: session?.user?.id || '',
         },
       })
       setForm({ ...emptyForm, mes: form.mes })
@@ -146,12 +146,13 @@ export default function Presupuestos() {
         {loading ? <p className="text-sm text-slate-400">Cargando presupuestos...</p> : null}
         {budgets.length ? (
           budgets.map((budget) => {
-            const spent = spentByCategory[budget.categoria] || 0
+            const budgetMonth = monthKeyFromDate(budget.mes) || budget.mes
+            const spent = spentByCategoryAndMonth[`${budgetMonth}-${budget.categoria}`] || 0
             const limit = parseAmount(budget.limite)
             const percent = limit ? Math.min((spent / limit) * 100, 100) : 0
             return (
               <div
-                key={budget.id || budget.categoria}
+                key={`${budget.mes}-${budget.categoria}`}
                 className="rounded-xl border border-slate-800/50 bg-slate-950/60 p-5 shadow-soft"
               >
                 <div className="flex items-center justify-between text-sm text-slate-200">

@@ -35,8 +35,8 @@ export default function Gastos() {
     })
   }, [rows, query, category])
 
-  const tableRows = filtered.map((row) => ({
-    id: row.id || `${row.fecha}-${row.descripcion}`,
+  const tableRows = filtered.map((row, index) => ({
+    id: row.id || `${row.fecha}-${row.descripcion}-${index}`,
     cells: [
       row.fecha || row.date,
       row.categoria || row.category,
@@ -49,7 +49,7 @@ export default function Gastos() {
   const loadRows = async () => {
     setLoading(true)
     try {
-      const data = await financeService.listExpenses(session?.email || '')
+      const data = await financeService.listExpenses(session?.user?.id || '')
       setRows(data)
     } catch (error) {
       notify.error(error.message)
@@ -59,10 +59,10 @@ export default function Gastos() {
   }
 
   useEffect(() => {
-    if (session?.email) {
+    if (session?.user?.id) {
       loadRows()
     }
-  }, [session?.email])
+  }, [session?.user?.id])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -77,7 +77,7 @@ export default function Gastos() {
       await financeService.createExpense({
         expense: {
           ...form,
-          usuario: session?.email || '',
+          usuario: session?.user?.id || '',
         },
       })
       setForm(emptyForm)

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../features/auth/AuthProvider.jsx'
-import { isEmail, isStrongPassword } from '../utils/validators.js'
+import { isEmail, isMinLength } from '../utils/validators.js'
 import { notify } from '../utils/notify.js'
 
 export default function Login() {
@@ -17,7 +17,7 @@ export default function Login() {
       notify.error('Correo invalido')
       return
     }
-    if (!isStrongPassword(form.password)) {
+    if (!isMinLength(form.password)) {
       notify.error('Contrasena muy corta')
       return
     }
@@ -96,7 +96,7 @@ export default function Login() {
             </div>
             <div className="rounded-xl border border-slate-800/40 bg-slate-950/60 p-6 shadow-soft">
               <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Acceso rapido</p>
-              <p className="mt-3">Usa usuarios en la hoja Usuarios para iniciar sesion.</p>
+              <p className="mt-3">Inicia sesion con tu correo y contrasena.</p>
             </div>
           </div>
         </div>
